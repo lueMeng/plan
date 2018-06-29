@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>添加计划</title>
+	<script src="./vue.js"></script>
+	<link rel="stylesheet" href="./css/bootstrap.css/bootstrap-theme.css">
+	<link rel="stylesheet" href="./css/bootstrap.css/bootstrap.css">
+	<style>
+		body {
+			background-color: 	#A9A9A9;
+		}
+		.container {
+			width:500px;
+			margin: 10px auto;
+			background-color:#00CED1;
+			padding: 25px;
+			border-radius: 25px;
+		}
+		.but1 {
+			position:relative;
+			left: 380px;
+			margin-top: 10px;
+		}
+		.ol {
+			padding: 20px 16px;
+			position: relative;
+		}
+		.ol li {
+			cursor:pointer;
+			font-size: 16px;
+			margin: 3px 0;
+		}
+		.ol li span{
+			cursor:pointer;
+			float:right;
+			color: 		#696969;
+			font-size: 12px;
+		}
+
+	</style>
+</head>
+<body>
+	<div class="container">
+	<h2 >学习计划</h2>
+	<div id="app">
+		<textarea class="form-control" rows="3" v-model="msg" @keyup.13="storage" 
+		id="textarea"
+		></textarea>
+		<!-- <button @click="storage">添加</button> -->
+		<button type="button" class="btn btn-primary but1" @click="storage"></span>添加</button>
+		<!-- <button @click="del">清除记录及所有</button> -->
+		<ol class="ol">
+			<li 
+			v-for="(list,index) of lists" 
+			:key= "index" 
+			:index = "index"
+			>{{list}}
+			<span @click="delthis(index)" >删除</span>
+			</li>
+		</ol>
+		<!-- <button @click="submit">保存</button> -->
+		<button type="button" class="btn btn-danger btn-lg btn-block" @click="del">清除所有</button>
+		<button type="button" class="btn btn-primary btn-lg btn-block" @click="submit">保存</button>
+	</div>
+	</div>
+	<script>
+	new Vue({
+		el: "#app",
+		data: {
+			msg:"",
+			lists:[],
+		},
+		created: function() {
+			if(!localStorage.lists==[]){this.lists = localStorage.lists.split(",")}
+			console.log(this.lists)
+		},
+		methods: {
+			storage: function() {
+				if(this.msg!==""){
+					this.lists.push(this.msg);
+					this.msg = ""
+					localStorage.lists = this.lists
+				}
+			},
+			del: function() {
+				this.lists = [];
+				
+			},
+			delthis:function (index){
+				this.lists.splice(index,1)//函数中使用到的变量，如果不是可以用this调用到的所有变量都需要通过函数传参进行调用参数，然后使用，例如，此处的index变量，不能使用this调用到，所以需要传入这个参数
+			},
+			submit:function() {
+				localStorage.lists = this.lists
+			},
+		}
+
+	})
+	//阻止textarea  默认换行操作
+	var textarea = document.getElementById("textarea");
+	textarea.onkeydown = function(e){  
+    		send(e);  
+ 		}  
+  	function send(e){  
+    		var code;  
+    		if (!e) var  e = window.event;  
+    		if (e.keyCode) code = e.keyCode;  
+    		else if (e.which) code = e.which;  
+    		if(code==13 && window.event){  
+       		e.returnValue = false;  
+    	}else if(code==13){  
+        	e.preventDefault();  
+    		}  
+  
+	}  
+	</script>
+</body>
+</html>
